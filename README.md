@@ -15,7 +15,8 @@ This is a little bookmarklet for inspecting the subdomains of the current websit
 
 ## 🖼️ Screenshots
 
-![image](https://github.com/user-attachments/assets/4a14848b-fe5b-43d8-8f3f-164d37f82273)
+![image](https://github.com/user-attachments/assets/317bbbd6-5eb5-4a81-9ec0-2125895f67df)
 
+![image](https://github.com/user-attachments/assets/3b8ebcb7-b6e0-4a22-9c00-3380cdc1e1c0)
 
 > *This project was made for [Hacklet](http://hacklet.hackclub.com/).*
