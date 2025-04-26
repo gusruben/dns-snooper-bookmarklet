@@ -51,8 +51,8 @@ if (SECOND_LEVEL_TLDS.find((tld) => window.location.hostname.endsWith(tld))) {
                 openServices: openServices.map(service => 
                     `${service}${ip.banners[service]?.apps ? ` (${ip.banners[service].apps.join(", ")})` : ""}`
                 ).join(", ")
-                    .replace(/(https?)/g, "<span class='service-web'>$1</span>")
-                    .replace(/(ssh)/g, "<span class='service-ssh'>$1</span>")
+                    .replace(/(\S*https?\S*)/gi, "<span class='service-web'>$1</span>")
+                    .replace(/(\S*ssh)/gi, "<span class='service-ssh'>$1</span>")
                     .replace(/(ip)/g, "<span class='service-ip'>$1</span>") ||
                     "<span class='service-none'>None</span>",
                 isWebsite: openServices.includes("http") || openServices.includes("https"),
