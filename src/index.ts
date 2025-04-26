@@ -34,23 +34,45 @@ if (SECOND_LEVEL_TLDS.find((tld) => window.location.hostname.endsWith(tld))) {
 
     // format data for the table
     const formattedData = data.a.flatMap((entry: any) => 
-        entry.ips.map((ip: any) => ({
-            host: entry.host,
-            ip: ip.ip,
-            asn: ip.asn,
-            asn_name: ip.asn_name,
-            open_services: Object.keys(ip.banners || {}).map(service => 
-                `${service}${ip.banners[service]?.apps ? ` (${ip.banners[service].apps.join(", ")})` : ""}`
-            ).join(", ") || "None",
-            is_website: ip.banners ? !!(ip.banners["http"] || ip.banners["https"]) : false,
-        }))
+        entry.ips.map((ip: any) => {
+            const openServices = Object.keys(ip.banners || {});
+
+            return {
+                host: entry.host,
+                ip: ip.ip,
+                asn: ip.asn,
+                asnName: ip.asn_name,
+                openServices: openServices.map(service => 
+                    `${service}${ip.banners[service]?.apps ? ` (${ip.banners[service].apps.join(", ")})` : ""}`
+                ).join(", ")
+                    .replace(/(https?)/g, "<span class='service-web'>$1</span>")
+                    .replace(/(ssh)/g, "<span class='service-ssh'>$1</span>")
+                    .replace(/(ip)/g, "<span class='service-ip'>$1</span>") ||
+                    "<span class='service-none'>None</span>",
+                isWebsite: openServices.includes("http") || openServices.includes("https"),
+            };
+        })
     );
+
+    const colors = [ "#ff6188", "#fc9867", "#ffd866", "#a9dc76", "#78dce8", "#ab9df2"];
+    const unusedColors = [...colors];
+    const asnColorMap: Record<string, string> = {};
+    formattedData.forEach((entry: any) => {
+        if (!asnColorMap[entry.asn]) {
+            if (unusedColors.length === 0) unusedColors.push(...colors);
+
+            const colorIndex = Math.floor(Math.random() * unusedColors.length);
+            asnColorMap[entry.asn] = unusedColors[colorIndex] as string;
+            unusedColors.splice(colorIndex, 1);
+        }
+        entry.asnColor = asnColorMap[entry.asn];
+    });
 
     const uiID = Math.random().toString(36).substring(2, 15);
     const ui = `
 <div id="dns-content">
-    <h1>DNS Data for <span class="monospace">${domain}</span></h1>
-    <table class="monospace">
+    <h1>DNS Data for <a href="//${domain}">${domain}</a></h1>
+    <table>
         <thead>
             <tr>
                 <th>Host</th>
@@ -63,11 +85,11 @@ if (SECOND_LEVEL_TLDS.find((tld) => window.location.hostname.endsWith(tld))) {
         <tbody>
             ${formattedData.map((entry: any) => `
                 <tr>
-                    <td>${entry.is_website ? `<a href="${entry.host}" target="_blank">${entry.host}</a>` : entry.host}</td>
+                    <td>${entry.isWebsite ? `<a href="//${entry.host}" target="_blank">${entry.host}</a>` : entry.host}</td>
                     <td>${entry.ip}</td>
                     <td>${entry.asn}</td>
-                    <td>${entry.asn_name}</td>
-                    <td>${entry.open_services}</td>
+                    <td class="asn"><span style="--asn-color: ${entry.asnColor}">${entry.asnName}</span></td>
+                    <td>${entry.openServices}</td>
                 </tr>
             `).join("")}
         </tbody>
@@ -75,14 +97,33 @@ if (SECOND_LEVEL_TLDS.find((tld) => window.location.hostname.endsWith(tld))) {
 </div>
 `
     const style = `
+@font-face {
+  font-family: 'Space Mono';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url(https://cdn.jsdelivr.net/fontsource/fonts/space-mono@latest/latin-400-normal.woff2) format('woff2'), url(https://cdn.jsdelivr.net/fontsource/fonts/space-mono@latest/latin-400-normal.woff) format('woff');
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
 #dns-${uiID} {
     position: fixed;
     inset: 0;
     z-index: 999999;
-    background: rgba(0, 0, 0, 0.8);
+    background: var(--background);
     color: white;
-    font-family: sans-serif;
+    font-family: "Space Mono", monospace;
     overflow-y: scroll;
+    
+    --background: #1c1e1f;
+    --text: white;
+    --text-muted: rgba(255,255,255,0.4);
+    --table-text: white;
+    --header-bg: #141414;
+    --row-odd-bg: #17191a;
+    --row-even-bg: #141414;
+    --link: #78dce8;
+    --padding-x: 1.4rem;
+    --padding-y: 0.8rem;
 }
 #dns-${uiID} #dns-content {
     display: flex;
@@ -90,14 +131,63 @@ if (SECOND_LEVEL_TLDS.find((tld) => window.location.hostname.endsWith(tld))) {
     justify-content: center;
     align-items: center;
     width: 100%;
-}
-#dns-${uiID} .monospace {
-    font-family: monospace;
+    padding-top: 1.25rem;
+    padding-bottom: 2.5rem;
 }
 #dns-${uiID} table {
     border-collapse: collapse;
+    width: 90%;
+    margin: 1.25rem 0;
+    color: var(--table-text);
 }
-`
+#dns-${uiID} th, #dns-${uiID} td {
+    padding: var(--padding-y) var(--padding-x);
+    text-align: left;
+}
+#dns-${uiID} th {
+    background: var(--header-bg);
+    font-weight: bold;
+}
+#dns-${uiID} tr:nth-child(odd) {
+    background: var(--row-odd-bg);
+}
+#dns-${uiID} tr:nth-child(even) {
+    background: var(--row-even-bg);
+}
+#dns-${uiID} .asn {
+    padding: calc(var(--padding-y) - 0.2rem) calc(var(--padding-x) - 0.35rem);
+}
+#dns-${uiID} .asn span {
+    padding: 0.2rem 0.35rem;
+    border-radius: 0.25rem;
+    color: var(--asn-color);
+    position: relative;
+    display: inline-block;
+}
+#dns-${uiID} .asn span::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 0.25rem;
+    background: var(--asn-color);
+    opacity: 0.1;
+}
+#dns-${uiID} a {
+    color: var(--link);
+}
+#dns-${uiID} .service-web {
+    color: ${colors[2]};
+}
+#dns-${uiID} .service-ssh {
+    color: ${colors[5]};
+}
+#dns-${uiID} .service-ip {
+    color: ${colors[3]};
+}
+#dns-${uiID} .service-none {
+    color: var(--text-muted);
+}
+`;
 
     const styleTag = document.createElement("style");
     styleTag.innerHTML = style;
