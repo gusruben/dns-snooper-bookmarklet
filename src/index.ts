@@ -238,7 +238,7 @@ a {
     wrapper.id = "dns-wrapper";
     wrapper.style.position = "fixed";
     wrapper.style.inset = "0";
-    wrapper.style.backgroundColor = "#1c1e1fcc";
+    wrapper.style.backgroundColor = "#131515d8";
     wrapper.style.zIndex = "999999";
 
     const iframe = document.createElement("iframe");
