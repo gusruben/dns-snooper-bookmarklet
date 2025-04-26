@@ -12,7 +12,7 @@ const result = await build({
 for (const res of result.outputs) {
     Bun.write(path.join(OUTPUT_DIR, res.path), res);
 
-    const wrappedCode = `(async()=>{${await res.text()}})()`
-    const bookmarklet = "javascript:" + encodeURIComponent(wrappedCode);
+    // const wrappedCode = `(async()=>{${await res.text()}})()`
+    const bookmarklet = "javascript:" + encodeURIComponent(await res.text());
     Bun.write(path.join(OUTPUT_DIR, BOOKMARKLET_FILE), bookmarklet);
 }
