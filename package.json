@@ -1,5 +1,5 @@
 {
-  "name": "hacklet",
+  "name": "dns-snooper-bookmarklet",
   "module": "index.ts",
   "devDependencies": {
     "@types/bun": "latest"

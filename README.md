@@ -13,7 +13,7 @@ This is a little bookmarklet for inspecting the subdomains of the current websit
 5. Build the bookmarklet with `bun build`.
 6. By default, the bookmarklet will be built in `dist/bookmarklet.txt`. Create a new bookmark in your browser and paste the contents of `bookmarklet.txt` into the URL. Done!
 
-## Screenshots
+## Screenshot
 
 ![image](https://github.com/user-attachments/assets/4a14848b-fe5b-43d8-8f3f-164d37f82273)
 

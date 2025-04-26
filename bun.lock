@@ -2,7 +2,7 @@
   "lockfileVersion": 1,
   "workspaces": {
     "": {
-      "name": "hacklet",
+      "name": "dns-snooper-bookmarklet",
       "devDependencies": {
         "@types/bun": "latest",
       },
