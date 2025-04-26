@@ -181,6 +181,8 @@ table {
     width: 90%;
     margin: 1.25rem 0;
     color: var(--table-text);
+    border-radius: 0.5rem;
+    overflow: hidden;
 }
 th, td {
     padding: var(--padding-y) var(--padding-x);
