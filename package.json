@@ -1,0 +1,15 @@
+{
+  "name": "hacklet",
+  "module": "index.ts",
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "bun build src --outdir=dist --minify"
+  }
+}
