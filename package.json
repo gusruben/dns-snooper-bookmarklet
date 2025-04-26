@@ -10,6 +10,6 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "bun build src --outdir=dist --minify"
+    "build": "bun build src/index.ts --outdir=dist --minify"
   }
 }
