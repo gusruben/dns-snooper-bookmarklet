@@ -27,7 +27,7 @@ if (SECOND_LEVEL_TLDS.find((tld) => window.location.hostname.endsWith(tld))) {
 (async () => {
     // @ts-ignore if the script has already run, just show that data
     if (window.dnsScriptHasRun) {
-        const iframe = document.querySelector("#dns-iframe") as HTMLIFrameElement | null;
+        const iframe = document.querySelector("#dns-wrapper") as HTMLIFrameElement | null;
         if (iframe) {
             iframe.style.display = "unset";
             document.body.style.overflow = "hidden"; // Prevent scrolling when reopening the iframe
@@ -80,7 +80,7 @@ if (SECOND_LEVEL_TLDS.find((tld) => window.location.hostname.endsWith(tld))) {
     const ui = `
 <div id="dns-content">
     <div class="dns-header">
-        <button id="dns-close" onclick="parent.document.getElementById('dns-iframe').remove(); parent.document.body.style.overflow = 'auto';">
+        <button id="dns-close" onclick="parent.document.getElementById('dns-wrapper').remove(); parent.document.body.style.overflow = 'auto';">
             <?xml version="1.0" encoding="UTF-8"?><svg width="1em" height="1em" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="white"><path d="M6.75827 17.2426L12.0009 12M17.2435 6.75736L12.0009 12M12.0009 12L6.75827 6.75736M12.0009 12L17.2435 17.2426" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
         </button>
         <h1>DNS Data for <a href="//${domain}">${domain}</a></h1>
@@ -233,15 +233,23 @@ a {
 }
 `;
 
+    // wrapper overlay to darken the main page
+    const wrapper = document.createElement("div");
+    wrapper.id = "dns-wrapper";
+    wrapper.style.position = "fixed";
+    wrapper.style.inset = "0";
+    wrapper.style.backgroundColor = "#1c1e1fcc";
+    wrapper.style.zIndex = "999999";
+
     const iframe = document.createElement("iframe");
-    iframe.id = "dns-iframe";
     iframe.style.position = "fixed";
-    iframe.style.inset = "0";
-    iframe.style.width = "100%";
-    iframe.style.height = "100%";
-    iframe.style.zIndex = "999999";
+    iframe.style.inset = "3rem";
+    iframe.style.borderRadius = "1rem";
+    iframe.style.width = "calc(100% - 6rem)";
+    iframe.style.height = "calc(100% - 6rem)";;
     iframe.style.border = "none";
-    document.body.appendChild(iframe);
+    wrapper.appendChild(iframe);
+    document.body.appendChild(wrapper);
 
     // disable scrolling on the background page
     document.body.style.overflow = "hidden";
