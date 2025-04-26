@@ -1,15 +1,20 @@
-# hacklet
+# DNS Snooper Bookmarklet
 
-To install dependencies:
+This is a little bookmarklet for inspecting the subdomains of the current website. It's powered by [DNS Dumpster](https://dnsdumpster.com/).
 
-```bash
-bun install
-```
+## 🔧 Installation
 
-To run:
+**Prerequisites:** To use the bookmarklet, you'll need a free API key from <dnsdumpster.com>. You'll also need a modern version of [Bun](http://bun.sh/).
 
-```bash
-bun run index.ts
-```
+1. Grab one from [/my-account](https://dnsdumpster.com/my-account/).
+2. Clone the repo with `git clone https://github.com/gusruben/dns-snooper-bookmarklet`.
+3. Install dependencies with `bun install`.
+4. Add your API key to `src/secrets.ts`.
+5. Build the bookmarklet with `bun build`.
+6. By default, the bookmarklet will be built in `dist/bookmarklet.txt`. Create a new bookmark in your browser and paste the contents of `bookmarklet.txt` into the URL. Done!
 
-This project was created using `bun init` in bun v1.2.9. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+## Screenshots
+
+
+
+> This project was made for [Hacklet](http://hacklet.hackclub.com/).
