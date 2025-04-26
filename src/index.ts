@@ -6,7 +6,7 @@ let domain;
 if (SECOND_LEVEL_TLDS.find((tld) => window.location.hostname.endsWith(tld))) {
     domain = window.location.hostname.split('.').slice(-3).join('.');
 } else {
-    domain = window.location.hostname.split('.').slice(-2).join('.');
+    domain = window.location.hostname.split('.').slice().join('.');
 }
 
 alert(domain);
