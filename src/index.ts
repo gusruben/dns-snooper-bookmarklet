@@ -27,7 +27,13 @@ if (SECOND_LEVEL_TLDS.find((tld) => window.location.hostname.endsWith(tld))) {
 (async () => {
 
     // @ts-ignore prevent the script from running twice
-    if (window.dnsScriptHasRun) return;
+    if (window.dnsScriptHasRun) {
+        const elem = document.querySelector("[dns-bookmarklet]") as HTMLDivElement | null;
+        if (elem) {
+            elem.style.display= "unset";
+            return;
+        }
+    }
 
     const data = await fetchDNSData(domain);
     console.log(data);
@@ -71,7 +77,12 @@ if (SECOND_LEVEL_TLDS.find((tld) => window.location.hostname.endsWith(tld))) {
     const uiID = Math.random().toString(36).substring(2, 15);
     const ui = `
 <div id="dns-content">
-    <h1>DNS Data for <a href="//${domain}">${domain}</a></h1>
+    <div class="dns-header">
+        <button id="dns-close" onclick="document.getElementById('dns-${uiID}').style.display='none'">
+            <?xml version="1.0" encoding="UTF-8"?><svg width="1em" height="1em" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="white"><path d="M6.75827 17.2426L12.0009 12M17.2435 6.75736L12.0009 12M12.0009 12L6.75827 6.75736M12.0009 12L17.2435 17.2426" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        </button>
+        <h1>DNS Data for <a href="//${domain}">${domain}</a></h1>
+    </div>
     <table>
         <thead>
             <tr>
@@ -134,6 +145,34 @@ if (SECOND_LEVEL_TLDS.find((tld) => window.location.hostname.endsWith(tld))) {
     padding-top: 1.25rem;
     padding-bottom: 2.5rem;
 }
+#dns-${uiID} .dns-header {
+    display: flex;
+    align-items: center;
+    padding: var(--padding-y) var(--padding-x);
+}
+#dns-${uiID} .dns-header h1 {
+    flex-grow: 1;
+    text-align: center;
+}
+#dns-${uiID} #dns-close {
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+    color: var(--text);
+    font-size: 2.75rem;
+    cursor: pointer;
+    position: absolute;
+    left: 4rem;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    opacity: 0.75;
+}
+#dns-${uiID} #dns-close:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    opacity: 1;
+}
+
 #dns-${uiID} table {
     border-collapse: collapse;
     width: 90%;
@@ -195,6 +234,7 @@ if (SECOND_LEVEL_TLDS.find((tld) => window.location.hostname.endsWith(tld))) {
 
     const div = document.createElement("div");
     div.id = `dns-${uiID}`;
+    div.setAttribute("dns-bookmarklet", "true");
     div.innerHTML = ui;
     document.body.appendChild(div);
 
