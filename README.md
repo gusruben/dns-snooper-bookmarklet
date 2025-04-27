@@ -10,7 +10,7 @@ This is a little bookmarklet for inspecting the subdomains of the current websit
 2. Clone the repo with `git clone https://github.com/gusruben/dns-snooper-bookmarklet`.
 3. Install dependencies with `bun install`.
 4. Add your API key to `src/secrets.ts`.
-5. Build the bookmarklet with `bun build`.
+5. Build the bookmarklet with `bun run build.ts`.
 6. By default, the bookmarklet will be built in `dist/bookmarklet.txt`. Create a new bookmark in your browser and paste the contents of `bookmarklet.txt` into the URL. Done!
 
 ## 🖼️ Screenshots
